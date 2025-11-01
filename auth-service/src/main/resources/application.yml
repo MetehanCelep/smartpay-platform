@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/smartpay_auth
+    username: smartpay
+    password: smartpay
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+server:
+  port: 8081
+
+security:
+  jwt:
+    secret: "c21hcnRwYXktc3VwZXItc2VjcmV0LWtleS0xMjM0NTY3ODk="
+    expiration: 3600000

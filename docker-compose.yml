@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16
+    container_name: sp-postgres
+    environment:
+      POSTGRES_USER: smartpay
+      POSTGRES_PASSWORD: smartpay
+      POSTGRES_DB: smartpay_auth
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: sp-rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"   # management UI
+volumes:
+  pgdata:
