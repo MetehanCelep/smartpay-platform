@@ -20,3 +20,8 @@ management:
     web:
       exposure:
         include: "health,info"
+
+security:
+  jwt:
+    secret: "c21hcnRwYXktc3VwZXItc2VjcmV0LWtleS0xMjM0NTY3ODk="
+    expiration: 3600000
