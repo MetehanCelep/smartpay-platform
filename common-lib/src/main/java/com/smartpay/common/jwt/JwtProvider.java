@@ -2,36 +2,61 @@ package com.smartpay.common.jwt;
 
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import com.smartpay.common.exception.GlobalErrorCode;
+import com.smartpay.common.exception.SmartPayException;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
+import javax.crypto.SecretKey;
 
-@Component
 public class JwtProvider {
 
-    @Value("${security.jwt.secret}")
-    private String secret;
+    private final SecretKey secretKey;
+    private final long expiration;
 
-    @Value("${security.jwt.expiration}")
-    private long expiration;
+    public JwtProvider(String secret, long expiration) {
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+        this.expiration = expiration;
+    }
 
     public String generateToken(String email) {
+        Date now = new Date();
+        Date expiry = new Date(now.getTime() + expiration);
+
         return Jwts.builder()
                 .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .setIssuedAt(now)
+                .setExpiration(expiry)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    public boolean validateToken(String token) {
+        parseClaims(token);
+        return true;
+    }
+
     public String getEmailFromToken(String token) {
-    return Jwts.parserBuilder()
-            .setSigningKey(secret)
-            .build()
-            .parseClaimsJws(token)
-            .getBody()
-            .getSubject();
-}
+        return parseClaims(token)
+                .getBody()
+                .getSubject();
+    }
+
+    private Jws<Claims> parseClaims(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+        } catch (JwtException | IllegalArgumentException ex) {
+            throw new SmartPayException(GlobalErrorCode.INVALID_TOKEN, "Invalid JWT token");
+        }
+    }
 }
