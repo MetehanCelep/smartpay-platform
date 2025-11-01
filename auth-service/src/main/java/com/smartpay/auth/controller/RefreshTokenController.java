@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.smartpay.auth.dto.AuthResponse;
 import com.smartpay.auth.entity.RefreshToken;
-import com.smartpay.auth.security.JwtProvider;
 import com.smartpay.auth.service.RefreshTokenService;
 import com.smartpay.common.dto.BaseResponse;
+import com.smartpay.common.jwt.JwtProvider;
 
 @RestController
 @RequestMapping("/api/auth")

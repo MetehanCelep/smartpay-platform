@@ -13,9 +13,9 @@ import com.smartpay.auth.entity.Merchant;
 import com.smartpay.auth.entity.RefreshToken;
 import com.smartpay.auth.repository.MerchantRepository;
 import com.smartpay.auth.repository.RefreshTokenRepository;
-import com.smartpay.auth.security.JwtProvider;
 import com.smartpay.auth.service.AuthService;
 import com.smartpay.common.enums.Status;
+import com.smartpay.common.jwt.JwtProvider;
 
 @Service
 public class AuthServiceImpl implements AuthService {
