@@ -4,8 +4,8 @@ services:
     image: postgres:16
     container_name: sp-postgres
     environment:
-      POSTGRES_USER: smartpay
-      POSTGRES_PASSWORD: smartpay
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
       POSTGRES_DB: smartpay_auth
     ports: ["5432:5432"]
     volumes: [pgdata:/var/lib/postgresql/data]
