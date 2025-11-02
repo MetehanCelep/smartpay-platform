@@ -23,7 +23,7 @@
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 
-    <!-- JPA + PostgreSQL (DB'ye bağlanacağız dediğin için ekliyoruz) -->
+    <!-- JPA + PostgreSQL -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -33,13 +33,20 @@
       <artifactId>postgresql</artifactId>
     </dependency>
 
-    <!-- Ortak DTO vs. kullanacaksak -->
+    <!-- RabbitMQ -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-amqp</artifactId>
+    </dependency>
+
+    <!-- Common lib -->
     <dependency>
       <groupId>com.smartpay</groupId>
       <artifactId>common-lib</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
+    <!-- JWT -->
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-api</artifactId>

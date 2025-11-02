@@ -1,6 +1,46 @@
+# Maven
 target/
 .logs/
 *.iml
 .idea/
 .mvn/wrapper/maven-wrapper.jar
+
+# Environment
 .env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ML Models
+fraud-detection-service/models/*.pkl
+fraud-detection-service/models/*.joblib
+
+# IDE
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Spring Boot
+spring-boot-devtools.properties

@@ -1,5 +1,8 @@
 package com.smartpay.payment.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,13 +25,21 @@ public class PaymentController {
     @PostMapping("/pay")
     public ResponseEntity<?> pay(@RequestBody PaymentRequest request) {
 
-        String txId = paymentService.processPayment(request);
+        try {
+            String txId = paymentService.processPayment(request);
 
-        return ResponseEntity.ok().body(
-                new Object() {
-                    public String message = "payment_success";
-                    public String transactionId = txId;
-                }
-        );
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "payment_success");
+            response.put("transactionId", txId);
+
+            return ResponseEntity.ok().body(response);
+
+        } catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", "payment_failed");
+            errorResponse.put("error", e.getMessage());
+
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
     }
 }

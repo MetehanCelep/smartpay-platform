@@ -7,13 +7,43 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: smartpay_auth
-    ports: ["5432:5432"]
-    volumes: [pgdata:/var/lib/postgresql/data]
+    ports: 
+      - "5432:5432"
+    volumes: 
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - smartpay-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: sp-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - smartpay-network
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: sp-rabbit
     ports:
       - "5672:5672"
-      - "15672:15672"   # management UI
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - smartpay-network
+
 volumes:
   pgdata:
+  redis-data:
+  rabbitmq-data:
+
+networks:
+  smartpay-network:
+    driver: bridge
