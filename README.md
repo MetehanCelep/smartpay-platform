@@ -77,29 +77,3 @@ AI/ML: Python 3.11, Flask, Scikit-learn (Dolandırıcılık tespiti için)
 Konteynerizasyon: Docker & Docker Compose
 
 Derleme: Maven
-
-**🏁 Başlarken**
-Gereksinimler
-Docker ve Docker Compose
-
-Java 21 JDK
-
-Apache Maven
-
-Çalıştırma
-Proje, docker-compose ile tek komutta çalışacak şekilde yapılandırılmıştır.
-
-Projenin ana dizinindeyken tüm modülleri derleyin ve Docker imajlarını oluşturun:
-
-Bash
-
-# Önbelleği temizleyerek tüm servislerin sıfırdan derlenmesini sağlar
-docker-compose build --no-cache
-Tüm servisleri (PostgreSQL, RabbitMQ, Redis ve uygulama servisleri) başlatın:
-
-Bash
-
-docker-compose up
-(Veya -d bayrağı ile arka planda çalıştırabilirsiniz: docker-compose up -d)
-
-Tüm servisler ayağa kalktığında, platform kullanıma hazırdır. API Gateway http://localhost:8080 portundan yayın yapacaktır.
