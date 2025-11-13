@@ -1,0 +1,23 @@
+Build ve Başlat
+docker-compose up --build
+-> İlk kez çalıştırıyorsan, kod değişikliği varsa
+
+Sadece Başlat (build olmadan)
+docker-compose up
+
+Arka planda çalıştır
+docker-compose up -d
+
+Logları izle
+docker-compose logs -f
+
+Tek servisin logunu izle
+docker-compose logs -f auth-service
+
+Durdur
+docker-compose down
+
+Durdur + Volume'leri sil
+docker-compose down -v
+-> Database'i sıfırdan başlatmak istiyorsan, PostgreSQL migration sorunu varsa, Redis cache'i temizlemek istiyorsan,
+RabbitMQ queue'larını temizlemek istiyorsan. DİKKAT: Tüm database verileri silinir!
