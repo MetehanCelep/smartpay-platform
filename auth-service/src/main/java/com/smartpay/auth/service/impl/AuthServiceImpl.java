@@ -62,7 +62,14 @@ public class AuthServiceImpl implements AuthService {
         refresh.setExpiresAt(LocalDateTime.now().plusDays(7));
         refreshTokenRepository.save(refresh);
 
-        return new AuthResponse(accessToken, refresh.getToken(), "Bearer", merchant.getEmail());
+        return new AuthResponse(
+            accessToken, 
+            refresh.getToken(), 
+            "Bearer", 
+            merchant.getEmail(),
+            merchant.getId().toString(),
+            merchant.getMerchantName() 
+        );
     }
 
     @Override
@@ -83,6 +90,13 @@ public class AuthServiceImpl implements AuthService {
         refresh.setExpiresAt(LocalDateTime.now().plusDays(7));
         refreshTokenRepository.save(refresh);
 
-        return new AuthResponse(accessToken, refresh.getToken(), "Bearer", merchant.getEmail());
+        return new AuthResponse(
+            accessToken, 
+            refresh.getToken(), 
+            "Bearer", 
+            merchant.getEmail(),
+            merchant.getId().toString(),
+            merchant.getMerchantName() 
+        );
     }
 }

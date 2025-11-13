@@ -1,12 +1,15 @@
 package com.smartpay.analytics.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.smartpay.analytics.dto.AnalyticsReport;
 import com.smartpay.analytics.entity.TransactionAnalytics;
 import com.smartpay.analytics.repository.TransactionAnalyticsRepository;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import jakarta.transaction.Transactional;
 
 @Service
 public class AnalyticsService {
@@ -17,6 +20,7 @@ public class AnalyticsService {
         this.repository = repository;
     }
 
+    @Transactional
     public TransactionAnalytics saveTransaction(TransactionAnalytics transaction) {
         return repository.save(transaction);
     }
@@ -41,6 +45,31 @@ public class AnalyticsService {
         Long blocked = repository.countByStatus("BLOCKED");
         Double totalAmount = repository.getTotalSuccessfulAmount();
         Double avgAmount = repository.getAverageTransactionAmount();
+
+        report.setTotalTransactions(total);
+        report.setSuccessfulTransactions(successful);
+        report.setBlockedTransactions(blocked);
+        report.setTotalAmount(totalAmount != null ? totalAmount : 0.0);
+        report.setAverageAmount(avgAmount != null ? avgAmount : 0.0);
+        
+        if (total > 0) {
+            report.setSuccessRate((successful.doubleValue() / total.doubleValue()) * 100);
+        } else {
+            report.setSuccessRate(0.0);
+        }
+
+        return report;
+    }
+
+    public AnalyticsReport generateMerchantReport(String merchantId) {
+        // ... (Bu metodun geri kalanı aynı) ...
+        AnalyticsReport report = new AnalyticsReport();
+
+        Long total = repository.countByMerchantId(merchantId);
+        Long successful = repository.countByMerchantIdAndStatus(merchantId, "SUCCESS");
+        Long blocked = repository.countByMerchantIdAndStatus(merchantId, "BLOCKED");
+        Double totalAmount = repository.getTotalSuccessfulAmountByMerchantId(merchantId);
+        Double avgAmount = repository.getAverageTransactionAmountByMerchantId(merchantId);
 
         report.setTotalTransactions(total);
         report.setSuccessfulTransactions(successful);

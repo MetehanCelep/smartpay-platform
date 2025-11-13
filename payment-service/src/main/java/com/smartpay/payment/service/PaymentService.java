@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.smartpay.payment.client.FraudDetectionClient;
 import com.smartpay.payment.client.FraudDetectionClient.FraudAnalysisResponse;
+import com.smartpay.payment.config.RabbitMQConfig;
 import com.smartpay.payment.dto.PaymentRequest;
 import com.smartpay.payment.event.PaymentEvent;
 
@@ -26,10 +27,8 @@ public class PaymentService {
 
         String txId = UUID.randomUUID().toString();
 
-        // Get user email from security context
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // Fraud detection analysis
         FraudAnalysisResponse fraudAnalysis = fraudDetectionClient.analyzeFraud(
                 request.getMerchantId(),
                 request.getAmount(),
@@ -42,21 +41,17 @@ public class PaymentService {
         System.out.println("Risk Level: " + fraudAnalysis.getRiskLevel());
         System.out.println("Recommendation: " + fraudAnalysis.getRecommendation());
 
-        // Block high-risk transactions
         if ("BLOCK".equals(fraudAnalysis.getRecommendation())) {
-            // Send failed payment notification
             sendPaymentNotification(txId, request.getMerchantId(), userEmail, request.getAmount(), "BLOCKED");
             throw new RuntimeException("Transaction blocked due to high fraud risk");
         }
 
-        // Review medium-risk transactions
         if ("REVIEW".equals(fraudAnalysis.getRecommendation())) {
             System.out.println("⚠️  Transaction flagged for manual review");
         }
 
         System.out.println("✅ PAYMENT SUCCESS => " + txId);
 
-        // Send success payment notification
         sendPaymentNotification(txId, request.getMerchantId(), userEmail, request.getAmount(), "SUCCESS");
 
         return txId;
@@ -65,11 +60,10 @@ public class PaymentService {
     private void sendPaymentNotification(String txId, String merchantId, String email, Double amount, String status) {
         try {
             PaymentEvent event = new PaymentEvent(txId, merchantId, email, amount, status);
-            rabbitTemplate.convertAndSend("payment.events", event);
-            System.out.println("📧 Payment notification sent to queue");
+            rabbitTemplate.convertAndSend(RabbitMQConfig.PAYMENT_EXCHANGE, "", event);
+            System.out.println("📧 Payment notification sent to EXCHANGE");
         } catch (Exception e) {
             System.err.println("Failed to send payment notification: " + e.getMessage());
-            // Don't fail the payment if notification fails
         }
     }
 }

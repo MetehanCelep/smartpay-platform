@@ -12,7 +12,8 @@ import org.springframework.web.client.RestTemplate;
 public class FraudDetectionClient {
 
     private final RestTemplate restTemplate;
-    private final String fraudServiceUrl = "http://localhost:8083/api/fraud/analyze";
+    // HATA ÇÖZÜMÜ BURADA: "localhost" -> "fraud-detection-service"
+    private final String fraudServiceUrl = "http://fraud-detection-service:8083/api/fraud/analyze";
 
     public FraudDetectionClient() {
         this.restTemplate = new RestTemplate();

@@ -127,6 +127,8 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
+      SECURITY_JWT_SECRET: "c21hcnRwYXktc3VwZXItc2VjcmV0LWtleS0xMjM0NTY3ODk="
+      SECURITY_JWT_EXPIRATION: 3600000
     depends_on:
       postgres:
         condition: service_healthy
@@ -155,32 +157,6 @@ services:
       - smartpay-network
     restart: unless-stopped
 
-  invoice-service:
-    build:
-      context: .
-      dockerfile: invoice-service/Dockerfile
-    container_name: sp-invoice-service
-    ports:
-      - "8086:8086"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/smartpay_auth
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: 123456
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_RABBITMQ_PORT: 5672
-      SPRING_RABBITMQ_USERNAME: guest
-      SPRING_RABBITMQ_PASSWORD: guest
-    volumes:
-      - invoice-data:/app/invoices
-    depends_on:
-      postgres:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    networks:
-      - smartpay-network
-    restart: unless-stopped
-
   api-gateway:
     build:
       context: .
@@ -191,8 +167,6 @@ services:
     environment:
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
-      SPRING_CLOUD_GATEWAY_ROUTES_0_URI: http://auth-service:8081
-      SPRING_CLOUD_GATEWAY_ROUTES_1_URI: http://payment-service:8082
     depends_on:
       redis:
         condition: service_healthy

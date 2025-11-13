@@ -1,10 +1,12 @@
 package com.smartpay.notification.listener;
 
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+
+import com.smartpay.notification.config.RabbitMQConfig;
 import com.smartpay.notification.dto.NotificationRequest;
 import com.smartpay.notification.event.PaymentEvent;
 import com.smartpay.notification.service.NotificationService;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.stereotype.Component;
 
 @Component
 public class PaymentEventListener {
@@ -15,11 +17,10 @@ public class PaymentEventListener {
         this.notificationService = notificationService;
     }
 
-    @RabbitListener(queues = "payment.events")
+    @RabbitListener(queues = RabbitMQConfig.NOTIFICATION_QUEUE)
     public void handlePaymentEvent(PaymentEvent event) {
         System.out.println("Received payment event: " + event.getTransactionId());
 
-        // Send email notification
         NotificationRequest emailNotification = new NotificationRequest(
             event.getEmail(),
             "Payment " + event.getStatus(),

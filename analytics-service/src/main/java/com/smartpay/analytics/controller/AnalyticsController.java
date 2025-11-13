@@ -1,14 +1,19 @@
 package com.smartpay.analytics.controller;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.smartpay.analytics.dto.AnalyticsReport;
 import com.smartpay.analytics.entity.TransactionAnalytics;
 import com.smartpay.analytics.service.AnalyticsService;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/analytics")
@@ -45,5 +50,10 @@ public class AnalyticsController {
     @GetMapping("/report")
     public ResponseEntity<AnalyticsReport> generateReport() {
         return ResponseEntity.ok(analyticsService.generateReport());
+    }
+
+    @GetMapping("/report/merchant/{merchantId}")
+    public ResponseEntity<AnalyticsReport> generateMerchantReport(@PathVariable String merchantId) {
+        return ResponseEntity.ok(analyticsService.generateMerchantReport(merchantId));
     }
 }

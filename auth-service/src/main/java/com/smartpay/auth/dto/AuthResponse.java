@@ -6,14 +6,18 @@ public class AuthResponse {
     private String refreshToken;
     private String tokenType;
     private String email;
+    private String merchantId; 
+    private String merchantName;
 
     public AuthResponse() {}
 
-    public AuthResponse(String accessToken, String refreshToken, String tokenType, String email) {
+    public AuthResponse(String accessToken, String refreshToken, String tokenType, String email, String merchantId, String merchantName) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.tokenType = tokenType;
         this.email = email;
+        this.merchantId = merchantId; 
+        this.merchantName = merchantName;
     }
 
     public String getAccessToken() { return accessToken; }
@@ -27,4 +31,10 @@ public class AuthResponse {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+    
+    public String getMerchantId() { return merchantId; }
+    public void setMerchantId(String merchantId) { this.merchantId = merchantId; }
+
+    public String getMerchantName() { return merchantName; }
+    public void setMerchantName(String merchantName) { this.merchantName = merchantName; }
 }

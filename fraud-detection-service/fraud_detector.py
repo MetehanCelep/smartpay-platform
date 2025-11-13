@@ -137,7 +137,7 @@ class FraudDetector:
         
         if features['amount'] > 10000:
             risk_factors.append('High amount transaction')
-            fraud_score += 0.1
+            fraud_score += 0.8
         
         if features['is_night']:
             risk_factors.append('Transaction at unusual hours')

@@ -1,12 +1,14 @@
 package com.smartpay.analytics.listener;
 
-import com.smartpay.analytics.entity.TransactionAnalytics;
-import com.smartpay.analytics.event.PaymentEvent;
-import com.smartpay.analytics.service.AnalyticsService;
+import java.time.LocalDateTime;
+
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import com.smartpay.analytics.config.RabbitMQConfig;
+import com.smartpay.analytics.entity.TransactionAnalytics;
+import com.smartpay.analytics.event.PaymentEvent;
+import com.smartpay.analytics.service.AnalyticsService;
 
 @Component
 public class PaymentEventListener {
@@ -17,7 +19,7 @@ public class PaymentEventListener {
         this.analyticsService = analyticsService;
     }
 
-    @RabbitListener(queues = "payment.events")
+    @RabbitListener(queues = RabbitMQConfig.ANALYTICS_QUEUE)
     public void handlePaymentEvent(PaymentEvent event) {
         System.out.println("📊 Received payment event for analytics: " + event.getTransactionId());
 

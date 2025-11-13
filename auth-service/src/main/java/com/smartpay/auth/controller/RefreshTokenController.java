@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smartpay.auth.dto.AuthResponse;
+import com.smartpay.auth.entity.Merchant;
 import com.smartpay.auth.entity.RefreshToken;
+import com.smartpay.auth.service.MerchantService;
 import com.smartpay.auth.service.RefreshTokenService;
 import com.smartpay.common.dto.BaseResponse;
 import com.smartpay.common.jwt.JwtProvider;
@@ -18,11 +20,14 @@ public class RefreshTokenController {
 
     private final RefreshTokenService refreshTokenService;
     private final JwtProvider jwtProvider;
+    private final MerchantService merchantService;
 
     public RefreshTokenController(RefreshTokenService refreshTokenService,
-            JwtProvider jwtProvider) {
+            JwtProvider jwtProvider,
+            MerchantService merchantService) {
         this.refreshTokenService = refreshTokenService;
         this.jwtProvider = jwtProvider;
+        this.merchantService = merchantService;
     }
 
     @PostMapping("/refresh")
@@ -30,9 +35,18 @@ public class RefreshTokenController {
 
         RefreshToken rt = refreshTokenService.verifyRefreshToken(refreshToken);
 
+        Merchant merchant = merchantService.findByEmail(rt.getEmail());
+
         String newAccessToken = jwtProvider.generateToken(rt.getEmail());
 
-        AuthResponse resp = new AuthResponse(newAccessToken, refreshToken, "Bearer", rt.getEmail());
+        AuthResponse resp = new AuthResponse(
+            newAccessToken, 
+            refreshToken, 
+            "Bearer", 
+            merchant.getEmail(),
+            merchant.getId().toString(),
+            merchant.getMerchantName()
+        );
 
         return ResponseEntity.ok(new BaseResponse<>("success", resp));
     }

@@ -60,19 +60,6 @@ spring:
                   burstCapacity: 100
                   requestedTokens: 1
         
-        # Invoice Service Routes
-        - id: invoice-service
-          uri: http://invoice-service:8086
-          predicates:
-            - Path=/api/invoices/**
-          filters:
-            - JwtAuthenticationFilter
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter:
-                  replenishRate: 50
-                  burstCapacity: 100
-                  requestedTokens: 1
       
       # Global CORS configuration
       globalcors:

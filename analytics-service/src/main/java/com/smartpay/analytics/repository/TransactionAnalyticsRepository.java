@@ -1,12 +1,13 @@
 package com.smartpay.analytics.repository;
 
-import com.smartpay.analytics.entity.TransactionAnalytics;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import com.smartpay.analytics.entity.TransactionAnalytics;
 
 public interface TransactionAnalyticsRepository extends JpaRepository<TransactionAnalytics, Long> {
 
@@ -26,4 +27,16 @@ public interface TransactionAnalyticsRepository extends JpaRepository<Transactio
 
     @Query("SELECT AVG(t.amount) FROM TransactionAnalytics t WHERE t.status = 'SUCCESS'")
     Double getAverageTransactionAmount();
+
+    @Query("SELECT COUNT(t) FROM TransactionAnalytics t WHERE t.merchantId = :merchantId")
+    Long countByMerchantId(@Param("merchantId") String merchantId);
+
+    @Query("SELECT COUNT(t) FROM TransactionAnalytics t WHERE t.merchantId = :merchantId AND t.status = :status")
+    Long countByMerchantIdAndStatus(@Param("merchantId") String merchantId, @Param("status") String status);
+
+    @Query("SELECT SUM(t.amount) FROM TransactionAnalytics t WHERE t.merchantId = :merchantId AND t.status = 'SUCCESS'")
+    Double getTotalSuccessfulAmountByMerchantId(@Param("merchantId") String merchantId);
+
+    @Query("SELECT AVG(t.amount) FROM TransactionAnalytics t WHERE t.merchantId = :merchantId AND t.status = 'SUCCESS'")
+    Double getAverageTransactionAmountByMerchantId(@Param("merchantId") String merchantId);
 }
