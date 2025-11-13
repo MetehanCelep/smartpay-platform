@@ -11,15 +11,15 @@ COPY common-lib/src ./common-lib/src
 WORKDIR /build/common-lib
 RUN mvn clean install -DskipTests
 
-# Copy and build payment-service
+# Copy and build invoice-service
 WORKDIR /build
-COPY payment-service/pom.xml ./payment-service/
-COPY payment-service/src ./payment-service/src
-WORKDIR /build/payment-service
+COPY invoice-service/pom.xml ./invoice-service/
+COPY invoice-service/src ./invoice-service/src
+WORKDIR /build/invoice-service
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=build /build/payment-service/target/*.jar app.jar
-EXPOSE 8082
+COPY --from=build /build/invoice-service/target/*.jar app.jar
+EXPOSE 8086
 ENTRYPOINT ["java", "-jar", "app.jar"]

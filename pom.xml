@@ -16,6 +16,7 @@
     <module>api-gateway</module>
     <module>notification-service</module>
     <module>analytics-service</module>
+    <module>invoice-service</module>
   </modules>
 
   <properties>
